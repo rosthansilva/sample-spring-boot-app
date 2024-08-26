@@ -1,0 +1,32 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+name: GitHub Action Java CI/CD with Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 21.0.2
+      uses: actions/setup-java@v2
+      with:
+        java-version: '21.0.2'
+    - name: Build with Maven
+      run: mvn clean install
+
+    - name: Build & push Docker image
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: cmakkaya/my-github-action-app
+        tags: latest
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: 
+        password: 
